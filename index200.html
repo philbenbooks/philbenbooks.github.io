@@ -152,6 +152,42 @@ body {
     width:16px; height:16px;
     stroke:var(--ink-soft);
   }
+.trad200 .filter-wrap {
+    max-width:420px;
+    margin:12px auto 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+.trad200 .filter-wrap label {
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+.trad200 #genreFilter {
+    padding:6px 26px 6px 10px;
+    border:1px solid var(--rule);
+    border-radius:6px;
+    background:var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%235B6472" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 7px center/11px;
+    -webkit-appearance:none;
+    appearance:none;
+    font-family:"Work Sans", sans-serif;
+    font-size:12.5px;
+    color:var(--ink);
+    outline:none;
+    cursor:pointer;
+    width:auto;
+    max-width:150px;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+.trad200 #genreFilter:focus {
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(169,128,61,0.15);
+  }
 .trad200 #resultCount {
     text-align:center;
     font-family:"IBM Plex Mono", monospace;
@@ -269,15 +305,6 @@ body {
     color:var(--ink-soft);
     font-style:italic;
   }
-.trad200 .tag-argot {
-    font-size:10px;
-    color:var(--gold);
-    border:1px solid var(--gold-soft);
-    border-radius:4px;
-    padding:0 4px;
-    margin-left:6px;
-    vertical-align:middle;
-  }
 .trad200 footer.trad200-footer {
     text-align:center;
     padding:30px 20px 50px;
@@ -327,9 +354,13 @@ body {
     <svg fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke-width="2"></circle><line stroke-width="2" x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
     <input autocomplete="off" enterkeyhint="search" id="searchInput" placeholder="Rechercher un titre ou un artiste…" type="text" />
   </div>
+  <div class="filter-wrap">
+    <label for="genreFilter">Genre</label>
+    <select id="genreFilter"></select>
+  </div>
   <div id="resultCount"></div>
   <div id="playlistBar">
-    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter ces <span id="playlistCount">0</span> chansons à la suite sur YouTube</a>
+    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter les <span id="playlistCount">0</span> chansons à la suite sur YouTube</a>
     <span class="playlist-note">Traductions complètes des paroles dans <a href="https://www.amazon.fr/dp/1790358760" target="_blank" rel="nofollow">le livre</a></span>
   </div>
 </header>
@@ -354,9 +385,6 @@ function normalize(str){
   return str
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/kh/g, 'h')
-    .replace(/ch/g, 'h')
-    .replace(/sh/g, 'h')
     .replace(/tz/g, 'ts')
     .replace(/th/g, 't')
     .replace(/ph/g, 'f')
@@ -386,6 +414,56 @@ function normalizeRaw(str){
     .trim();
 }
 
+// Génère toutes les variantes de la chaîne en remplaçant chaque digraphe
+// sh/ch/kh par chacune des 3 formes possibles (khaf/chet/shin se
+// translittèrent tous de façon interchangeable en français/anglais).
+// Contrairement à une fusion "sh/ch/kh -> h", on ne s'effondre JAMAIS sur
+// une lettre unique trop générique : chaque variante reste une vraie
+// sous-chaîne de 2+ caractères, donc pas d'explosion de faux-positifs
+// même sur une requête courte comme "sha" ou "cha".
+function digraphVariants(str){
+  const DIGRAPHS = ['sh', 'ch', 'kh'];
+  const positions = [];
+  const re = /sh|ch|kh/g;
+  let m;
+  while((m = re.exec(str))) positions.push(m.index);
+  if(positions.length === 0) return [str];
+
+  let variants = [str];
+  positions.forEach(pos => {
+    const next = [];
+    variants.forEach(v => {
+      DIGRAPHS.forEach(d => next.push(v.slice(0, pos) + d + v.slice(pos + 2)));
+    });
+    variants = next;
+  });
+  return [...new Set(variants)];
+}
+
+// Table de correspondance code -> libellé affiché dans le menu déroulant.
+// Un seul point de vérité : ajouter/renommer un genre ne touche que cette ligne.
+const GENRES = {
+  0: 'Poémes en musique', 
+  1: 'Classiques',
+  2: 'Pop/Rock',
+  3: 'Religieux',
+  4: 'Mizrahi/Oriental'
+};
+
+function populateGenreOptions(selectEl){
+  const optAll = document.createElement('option');
+  optAll.value = '';
+  optAll.textContent = 'Tous';
+  selectEl.appendChild(optAll);
+
+  Object.keys(GENRES).forEach(code => {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = GENRES[code];
+    selectEl.appendChild(opt);
+  });
+}
+
 function shortLabel(title){
   const word = title.split(',')[0].split('-')[0].trim().split(' ')[0];
   return word.slice(0, 6);
@@ -406,6 +484,7 @@ function buildEntry(item){
   li.className = 'entry';
   li.dataset.search = normalize(item.artist + ' ' + item.title);
   li.dataset.searchRaw = normalizeRaw(item.artist + ' ' + item.title);
+  li.dataset.genre = (item.note != null) ? String(item.note) : '';
 
   const folio = document.createElement('span');
   folio.className = 'folio';
@@ -433,13 +512,6 @@ function buildEntry(item){
     span.className = 'no-link';
     span.textContent = item.title;
     textWrap.appendChild(span);
-  }
-
-  if(item.note === 'argot'){
-    const tag = document.createElement('span');
-    tag.className = 'tag-argot';
-    tag.textContent = 'argot';
-    textWrap.appendChild(tag);
   }
 
   li.appendChild(textWrap);
@@ -510,6 +582,8 @@ let currentN = null;
 let currentColWidth = null;
 
 const searchInput = document.getElementById('searchInput');
+const genreFilter = document.getElementById('genreFilter');
+populateGenreOptions(genreFilter);
 const resultCount = document.getElementById('resultCount');
 const playlistBar = document.getElementById('playlistBar');
 const playlistLink = document.getElementById('playlistLink');
@@ -530,16 +604,35 @@ const MAX_PLAYLIST = (function(){
   return max || 19; // filet de sécurité si ITEMS est vide
 })();
 
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function reapplySearchFilter(){
   const q = normalize(searchInput.value);
   const qRaw = normalizeRaw(searchInput.value);
+  const g = genreFilter.value;
+  // Canal 1 (phonétique) : tz/th/ph/ou/w/q/c fusionnés + lettres doublées
+  // réduites. Sous 3 caractères, trop peu discriminant, on le désactive.
+  const usePhonetic = q.length >= 3;
+  // Canal 2 (variantes brutes) : sh/ch/kh interchangés explicitement, sans
+  // jamais fusionner sur une lettre commune. Couvre aussi le cas "pas de
+  // digraphe" (la requête brute elle-même fait partie de ses variantes).
+  const rawVariants = digraphVariants(qRaw);
   let visible = 0;
   const visibleIds = [];
 
   document.querySelectorAll('li.entry').forEach(li => {
-    // Chemin phonétique (gère les variantes de translittération) OU chemin
-    // brut (filet de sécurité pour les saisies partielles en plein digraphe).
-    const match = !q || li.dataset.search.includes(q) || li.dataset.searchRaw.includes(qRaw);
+    const textMatch = !q
+      || (usePhonetic && li.dataset.search.includes(q))
+      || rawVariants.some(v => li.dataset.searchRaw.includes(v));
+    const genreMatch = !g || li.dataset.genre === g;
+    const match = textMatch && genreMatch;
     li.classList.toggle('hidden', !match);
     if(match){
       visible++;
@@ -547,11 +640,12 @@ function reapplySearchFilter(){
     }
   });
 
-  resultCount.textContent = q ? (visible + ' résultat' + (visible>1?'s':'')) : '';
+  const filtered = !!(q || g);
+  resultCount.textContent = filtered ? (visible + ' résultat' + (visible>1?'s':'')) : '';
 
-  // Playlist : seulement si recherche active + au moins 2 vidéos trouvées
-  if(q && visibleIds.length >= 2){
-    const ids = visibleIds.slice(0, MAX_PLAYLIST);
+  // Playlist : seulement si un filtre est actif + au moins 2 vidéos trouvées
+  if(filtered && visibleIds.length >= 2){
+    const ids = shuffle(visibleIds).slice(0, MAX_PLAYLIST);
     playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
     playlistCount.textContent = ids.length;
     playlistBar.classList.add('show');
@@ -618,6 +712,7 @@ ro.observe(mainEl);
 maybeRerender();
 
 searchInput.addEventListener('input', reapplySearchFilter);
+genreFilter.addEventListener('change', reapplySearchFilter);
 
 searchInput.addEventListener('keydown', function(e){
   if (e.key === 'Enter'){
