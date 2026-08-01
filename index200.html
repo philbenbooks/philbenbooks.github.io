@@ -165,9 +165,10 @@ body {
     stroke:var(--ink-soft);
   }
 .trad200 .filter-wrap {
-    max-width:420px;
+    max-width:520px;
     margin:12px auto 0;
     display:flex;
+    flex-wrap:wrap;
     align-items:center;
     justify-content:center;
     gap:8px;
@@ -180,8 +181,12 @@ body {
     color:var(--ink-soft);
     white-space:nowrap;
   }
-.trad200 #genreFilter {
+.trad200 #genreFilter,
+.trad200 #artistFilter {
     padding:6px 26px 6px 10px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
     border:1px solid var(--rule);
     border-radius:6px;
     background:var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%235B6472" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 7px center/11px;
@@ -196,7 +201,8 @@ body {
     max-width:150px;
     transition:border-color .15s ease, box-shadow .15s ease;
   }
-.trad200 #genreFilter:focus {
+.trad200 #genreFilter:focus,
+.trad200 #artistFilter:focus {
     border-color:var(--gold);
     box-shadow:0 0 0 3px rgba(169,128,61,0.15);
   }
@@ -335,6 +341,32 @@ body {
     color:var(--ink-soft);
     font-family:"IBM Plex Mono", monospace;
   }
+.trad200 .buy-links {
+    max-width:560px;
+    margin:14px auto 0;
+    padding:10px 16px;
+    border:1px solid var(--gold-soft);
+    border-radius:8px;
+    background:rgba(169,128,61,0.06);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    line-height:1.6;
+  }
+.trad200 .buy-links .buy-label {
+    display:block;
+    color:var(--ink-soft);
+    margin-bottom:2px;
+  }
+.trad200 .buy-links .buy-options a {
+    color:var(--gold);
+    text-decoration:none;
+    border-bottom:1px solid var(--gold-soft);
+  }
+.trad200 .buy-links .buy-options a:hover { color:var(--sea); border-bottom-color:var(--sea); }
+.trad200 .buy-links .sep {
+    color:var(--rule);
+    margin:0 4px;
+  }
 @media (max-width: 980px) {.trad200 .index-grid {grid-template-columns:repeat(2, 1fr);}}
 @media (max-width: 620px) {.trad200 .index-grid {grid-template-columns:1fr; border-left:none;}.trad200 .col {border-right:none;}.trad200 header.hero {padding:44px 18px 30px;}}
 
@@ -373,6 +405,17 @@ body {
   <h1 class="title">Jukebox par titre/artiste du livre<br />"<a href="https://www.amazon.fr/dp/1790358760" rel="nofollow" target="_blank">200 Traductions de Chansons Israéliennes</a>"</h1>
   <p class="subtitle">Index alphabétique (translittération hébraïque) des 200 chansons du livre, avec lien d'écoute YouTube et renvoi à la page correspondante.</p>
 
+  <div class="buy-links">
+    <span class="buy-label">Traductions complètes des paroles dans le livre</span>
+    <span class="buy-options">
+      Papier : <a href="https://www.amazon.fr/dp/1790358760" target="_blank" rel="nofollow">Amazon</a>
+      <span class="sep">·</span>
+      Ebook : <a href="https://www.paypal.com/ncp/payment/JUE885S38BMYL" target="_blank" rel="nofollow">PayPal</a>,
+      <a href="https://philben55.gumroad.com/l/kkxnf" target="_blank" rel="nofollow">Gumroad</a>,
+      <a href="https://play.google.com/store/books/details?id=xzr1EQAAQBAJ" target="_blank" rel="nofollow">Google Play</a>
+    </span>
+  </div>
+
   <div class="anthem">
     <span class="label">Hymne national</span>
     <div class="anthem-title">
@@ -388,10 +431,12 @@ body {
   <div class="filter-wrap">
     <label for="genreFilter">Genre</label>
     <select id="genreFilter"></select>
+    <label for="artistFilter">Artiste</label>
+    <select id="artistFilter"></select>
   </div>
   <div id="resultCount"></div>
   <div id="playlistBar">
-    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter les <span id="playlistCount">0</span> chansons à la suite sur YouTube</a>
+    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter les <span id="playlistCount">0</span> chansons<span id="playlistSuffix"></span> sur YouTube</a>
     <span class="playlist-note">Traductions complètes des paroles dans <a href="https://www.amazon.fr/dp/1790358760" target="_blank" rel="nofollow">le livre</a></span>
   </div>
 </header>
@@ -402,6 +447,8 @@ body {
 
 <footer class="trad200-footer">
   Phil Ben-<a href="https://www.amazon.fr/dp/1790358760" rel="noopener noreferrer" target="_blank">200 Traductions de Chansons Israéliennes</a>
+  <br />
+  Ebook : <a href="https://www.paypal.com/ncp/payment/JUE885S38BMYL" rel="noopener noreferrer nofollow" target="_blank">PayPal</a>, <a href="https://philben55.gumroad.com/l/kkxnf" rel="noopener noreferrer nofollow" target="_blank">Gumroad</a>, <a href="https://play.google.com/store/books/details?id=xzr1EQAAQBAJ" rel="noopener noreferrer nofollow" target="_blank">Google Play</a>
 </footer>
 
 </div>
@@ -495,6 +542,32 @@ function populateGenreOptions(selectEl){
   });
 }
 
+// Liste déroulante des artistes : valeurs uniques du champ "artist",
+// triées alphabétiquement (le champ est déjà au format "Prénom Nom"),
+// avec le nombre de chansons entre parenthèses.
+function populateArtistOptions(selectEl){
+  const optAll = document.createElement('option');
+  optAll.value = '';
+  optAll.textContent = 'Tous';
+  selectEl.appendChild(optAll);
+
+  const counts = {};
+  ITEMS.forEach(item => {
+    if(!item.artist) return;
+    counts[item.artist] = (counts[item.artist] || 0) + 1;
+  });
+
+  const artists = Object.keys(counts)
+    .sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+
+  artists.forEach(artist => {
+    const opt = document.createElement('option');
+    opt.value = artist;
+    opt.textContent = `${artist} (${counts[artist]})`;
+    selectEl.appendChild(opt);
+  });
+}
+
 function shortLabel(title){
   const word = title.split(',')[0].split('-')[0].trim().split(' ')[0];
   return word.slice(0, 6);
@@ -516,6 +589,7 @@ function buildEntry(item){
   li.dataset.search = normalize(item.artist + ' ' + item.title);
   li.dataset.searchRaw = normalizeRaw(item.artist + ' ' + item.title);
   li.dataset.genre = (item.note != null) ? String(item.note) : '';
+  li.dataset.artist = item.artist || '';
 
   const folio = document.createElement('span');
   folio.className = 'folio';
@@ -622,10 +696,13 @@ let currentColWidth = null;
 const searchInput = document.getElementById('searchInput');
 const genreFilter = document.getElementById('genreFilter');
 populateGenreOptions(genreFilter);
+const artistFilter = document.getElementById('artistFilter');
+populateArtistOptions(artistFilter);
 const resultCount = document.getElementById('resultCount');
 const playlistBar = document.getElementById('playlistBar');
 const playlistLink = document.getElementById('playlistLink');
 const playlistCount = document.getElementById('playlistCount');
+const playlistSuffix = document.getElementById('playlistSuffix');
 
 // Nombre max d'IDs dans une URL watch_videos.
 // Plafonné au nombre de chansons du dataset pour l'artiste le plus représenté :
@@ -655,6 +732,7 @@ function reapplySearchFilter(){
   const q = normalize(searchInput.value);
   const qRaw = normalizeRaw(searchInput.value);
   const g = genreFilter.value;
+  const a = artistFilter.value;
   // Canal 1 (phonétique) : tz/th/ph/ou/w/q/c fusionnés + lettres doublées
   // réduites. Sous 3 caractères, trop peu discriminant, on le désactive.
   const usePhonetic = q.length >= 3;
@@ -670,7 +748,8 @@ function reapplySearchFilter(){
       || (usePhonetic && li.dataset.search.includes(q))
       || rawVariants.some(v => li.dataset.searchRaw.includes(v));
     const genreMatch = !g || li.dataset.genre === g;
-    const match = textMatch && genreMatch;
+    const artistMatch = !a || li.dataset.artist === a;
+    const match = textMatch && genreMatch && artistMatch;
     li.classList.toggle('hidden', !match);
     if(match){
       visible++;
@@ -678,7 +757,7 @@ function reapplySearchFilter(){
     }
   });
 
-  const filtered = !!(q || g);
+  const filtered = !!(q || g || a);
   resultCount.textContent = filtered ? (visible + ' résultat' + (visible>1?'s':'')) : '';
 
   // Playlist : seulement si un filtre est actif + au moins 2 vidéos trouvées
@@ -686,6 +765,21 @@ function reapplySearchFilter(){
     const ids = shuffle(visibleIds).slice(0, MAX_PLAYLIST);
     playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
     playlistCount.textContent = ids.length;
+
+    // Texte du lien personnalisé selon le filtre actif (le nom de la
+    // playlist YouTube elle-même n'est pas paramétrable côté URL).
+    let suffix = ' à la suite';
+    if(a && g){
+      suffix = ' de ' + a + ' (' + GENRES[g] + ')';
+    } else if(a){
+      suffix = ' de ' + a;
+    } else if(g){
+      suffix = ' ' + GENRES[g];
+    } else if(searchInput.value.trim()){
+      suffix = ' pour « ' + searchInput.value.trim() + ' »';
+    }
+    playlistSuffix.textContent = suffix;
+
     playlistBar.classList.add('show');
   } else {
     playlistBar.classList.remove('show');
@@ -751,6 +845,7 @@ maybeRerender();
 
 searchInput.addEventListener('input', reapplySearchFilter);
 genreFilter.addEventListener('change', reapplySearchFilter);
+artistFilter.addEventListener('change', reapplySearchFilter);
 
 searchInput.addEventListener('keydown', function(e){
   if (e.key === 'Enter'){
