@@ -601,7 +601,7 @@ const ITEMS = [
   },
   {
     "page": "194",
-    "artist": "LaHakat Pikoud Merkaz",
+    "artist": "Lahakat Pikoud Merkaz",
     "title": "Guivat HaTakhmochet",
     "titlehebrew": "גבעת התחמושת",
     "href": "https://www.youtube.com/watch?v=PdzUCvmoPCw",
@@ -1081,7 +1081,7 @@ const ITEMS = [
   },
   {
     "page": "56",
-    "artist": "LahaKat Hanahal",
+    "artist": "Lahakat HanaHal",
     "title": "Mahar",
     "titlehebrew": "מחר",
     "href": "https://www.youtube.com/watch?v=FVFwCL_pvGY",
@@ -1209,7 +1209,7 @@ const ITEMS = [
   },
   {
     "page": "173",
-    "artist": "Static",
+    "artist": "Static et Ben El",
     "title": "Namasté",
     "titlehebrew": "נמסטה",
     "href": "https://www.youtube.com/watch?v=G_e707496Fg",
@@ -1289,7 +1289,7 @@ const ITEMS = [
   },
   {
     "page": "129",
-    "artist": "LahaKat Hatothanim",
+    "artist": "Lahakat Hatothanim",
     "title": "Prachim BaKaneh",
     "titlehebrew": "פרחים בקנה",
     "href": "https://www.youtube.com/watch?v=EwvAywMw93M",
