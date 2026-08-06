@@ -245,6 +245,25 @@ body {
     font-style:italic;
   }
 .trad200 #playlistBar .playlist-note a { color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold-soft); }
+.trad200 #playlistBar button.playlist-reroll {
+    display:inline-block;
+    margin-left:8px;
+    padding:0;
+    border:none;
+    background:none;
+    font-family:inherit;
+    font-size:12px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-decoration:none;
+    border-bottom:1px dashed var(--ink-soft);
+  }
+.trad200 #playlistBar button.playlist-reroll:hover { color:var(--gold); border-bottom-color:var(--gold); }
+.trad200 #playlistBar a.playlist-link.opened {
+    opacity:0.55;
+    cursor:default;
+    pointer-events:none;
+  }
 .trad200 main {
     max-width:1240px;
     margin:0 auto;
@@ -415,7 +434,7 @@ body {
 <header class="hero">
   <div class="eyebrow">Phil Ben/By — Livre rouge</div>
   <h1 class="title">Jukebox par titre/artiste du livre<br />"<a href="https://www.amazon.fr/dp/1790358760" rel="nofollow" target="_blank">200 Traductions de Chansons Israéliennes</a>"</h1>
-  <p class="subtitle">Index alphabétique (translittération hébraïque) des 200 chansons du livre, avec lien d'écoute YouTube et renvoi à la page correspondante.</p>
+  <p class="subtitle">Index alphabétique (translittération hébraïque) des 200 chansons du livre, avec lien d'écoute YouTube et renvoi à la page correspondante.(v8)</p>
 
   <div class="buy-links">
     <span class="buy-label">Traductions complètes des paroles dans le livre</span>
@@ -452,7 +471,7 @@ body {
   </div>
   <div id="resultCount"></div>
   <div id="playlistBar">
-    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter les <span id="playlistCount">0</span> chansons<span id="playlistSuffix"></span> sur YouTube</a>
+    <a class="playlist-link" id="playlistLink" href="#" target="_blank" rel="nofollow noopener">▶ Écouter <span id="playlistLes">les </span><span id="playlistCount">0</span> chansons<span id="playlistSuffix"></span> sur YouTube</a><button class="playlist-reroll" id="playlistReroll" type="button" title="Tirer une autre sélection aléatoire">🔀 autre sélection</button>
     <span class="playlist-note">Traductions complètes des paroles dans <a href="https://www.amazon.fr/dp/1790358760" target="_blank" rel="nofollow">le livre</a></span>
   </div>
 </header>
@@ -717,8 +736,16 @@ populateArtistOptions(artistFilter);
 const resultCount = document.getElementById('resultCount');
 const playlistBar = document.getElementById('playlistBar');
 const playlistLink = document.getElementById('playlistLink');
+const playlistLes = document.getElementById('playlistLes');
 const playlistCount = document.getElementById('playlistCount');
 const playlistSuffix = document.getElementById('playlistSuffix');
+const playlistReroll = document.getElementById('playlistReroll');
+
+// Playlist aléatoire au chargement : réservée au mobile (Android/iOS), où
+// un seul onglet est ouvert à la fois par design du navigateur. Sur PC,
+// plusieurs onglets s'accumulent à chaque clic (Chrome) sans mécanisme
+// fiable pour les fusionner ; on garde donc le mécanisme d'origine.
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 // Nombre max d'IDs dans une URL watch_videos.
 // Plafonné au nombre de chansons du dataset pour l'artiste le plus représenté :
@@ -742,6 +769,43 @@ function shuffle(arr){
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+// Verrou "playlist déjà ouverte" : une fois cliqué, le lien se désactive
+// visuellement et fonctionnellement pour CETTE playlist précise. Il ne se
+// réactive que quand le contenu change réellement (nouveau filtre, reroll).
+// Volontairement indépendant de toute gestion de fenêtre navigateur
+// (fiable même en file://, contrairement au ciblage de fenêtre nommée).
+let playlistOpened = false;
+function markPlaylistFresh(){
+  playlistOpened = false;
+  playlistLink.classList.remove('opened');
+}
+
+function showRandomPlaylist(){
+  if(!isMobile){
+    // Desktop : pas de repli aléatoire, comportement d'origine (barre
+    // masquée tant qu'aucun filtre n'est actif).
+    playlistReroll.style.display = 'none';
+    playlistBar.classList.remove('show');
+    return;
+  }
+  const allIds = [];
+  document.querySelectorAll('li.entry').forEach(li => {
+    if(li.dataset.videoId) allIds.push(li.dataset.videoId);
+  });
+  if(allIds.length < 2){
+    playlistBar.classList.remove('show');
+    return;
+  }
+  const ids = shuffle(allIds).slice(0, MAX_PLAYLIST);
+  playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
+  playlistCount.textContent = ids.length;
+  playlistSuffix.textContent = ' aléatoires';
+  playlistLes.textContent = '';
+  markPlaylistFresh();
+  playlistReroll.style.display = '';
+  playlistBar.classList.add('show');
 }
 
 function reapplySearchFilter(){
@@ -777,28 +841,40 @@ function reapplySearchFilter(){
   resultCount.textContent = filtered ? (visible + ' résultat' + (visible>1?'s':'')) : '';
 
   // Playlist : seulement si un filtre est actif + au moins 2 vidéos trouvées
-  if(filtered && visibleIds.length >= 2){
-    const ids = shuffle(visibleIds).slice(0, MAX_PLAYLIST);
-    playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
-    playlistCount.textContent = ids.length;
+  if(filtered){
+    if(visibleIds.length >= 2){
+      const ids = shuffle(visibleIds).slice(0, MAX_PLAYLIST);
+      playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
+      playlistCount.textContent = ids.length;
+      markPlaylistFresh();
 
-    // Texte du lien personnalisé selon le filtre actif (le nom de la
-    // playlist YouTube elle-même n'est pas paramétrable côté URL).
-    let suffix = ' à la suite';
-    if(a && g){
-      suffix = ' de ' + a + ' (' + GENRES[g] + ')';
-    } else if(a){
-      suffix = ' de ' + a;
-    } else if(g){
-      suffix = ' ' + GENRES[g];
-    } else if(searchInput.value.trim()){
-      suffix = ' pour « ' + searchInput.value.trim() + ' »';
+      // Texte du lien personnalisé selon le filtre actif (le nom de la
+      // playlist YouTube elle-même n'est pas paramétrable côté URL).
+      let suffix = ' à la suite';
+      if(a && g){
+        suffix = ' de ' + a + ' (' + GENRES[g] + ')';
+      } else if(a){
+        suffix = ' de ' + a;
+      } else if(g){
+        suffix = ' ' + GENRES[g];
+      } else if(searchInput.value.trim()){
+        suffix = ' pour « ' + searchInput.value.trim() + ' »';
+      }
+      playlistSuffix.textContent = suffix;
+      playlistLes.textContent = 'les ';
+      playlistReroll.style.display = 'none';
+
+      playlistBar.classList.add('show');
+    } else {
+      // Filtre actif mais trop peu de résultats : comportement standard
+      // d'origine, on masque la barre (pas de repli aléatoire ici).
+      playlistReroll.style.display = 'none';
+      playlistBar.classList.remove('show');
     }
-    playlistSuffix.textContent = suffix;
-
-    playlistBar.classList.add('show');
   } else {
-    playlistBar.classList.remove('show');
+    // Aucun filtre actif : on retombe sur une sélection aléatoire plutôt
+    // que de masquer la barre, pour éviter d'avoir à cliquer 200 fois.
+    showRandomPlaylist();
   }
 }
 
@@ -868,6 +944,17 @@ searchInput.addEventListener('keydown', function(e){
     e.preventDefault();
     searchInput.blur();
   }
+});
+
+playlistReroll.addEventListener('click', showRandomPlaylist);
+
+playlistLink.addEventListener('click', function(e){
+  if(playlistOpened){
+    e.preventDefault();
+    return;
+  }
+  playlistOpened = true;
+  playlistLink.classList.add('opened');
 });
 </script>
 </body>
