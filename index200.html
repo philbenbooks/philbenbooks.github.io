@@ -38,7 +38,7 @@ body {
   }
 .trad200 header.hero {
     position:relative;
-    padding:64px 24px 40px;
+    padding:8px 24px 40px;
     text-align:center;
     background:
       radial-gradient(ellipse at top, rgba(169,128,61,0.10), transparent 60%),
@@ -394,7 +394,7 @@ body {
     margin:0 4px;
   }
 @media (max-width: 980px) {.trad200 .index-grid {grid-template-columns:repeat(2, 1fr);}}
-@media (max-width: 620px) {.trad200 .index-grid {grid-template-columns:1fr; border-left:none;}.trad200 .col {border-right:none;}.trad200 header.hero {padding:44px 18px 30px;}}
+@media (max-width: 620px) {.trad200 .index-grid {grid-template-columns:1fr; border-left:none;}.trad200 .col {border-right:none;}.trad200 header.hero {padding:8px 18px 30px;}}
 @media (max-width: 400px) {
   .trad200 .filter-wrap {gap:6px;}
   .trad200 .filter-group {gap:5px; flex:0 1 auto; min-width:0;}
@@ -555,13 +555,14 @@ function digraphVariants(str){
 
 // Table de correspondance code -> libellé affiché dans le menu déroulant.
 // Un seul point de vérité : ajouter/renommer un genre ne touche que cette ligne.
-const GENRES = {
-  0: 'Poémes en musique', 
-  1: 'Classiques',
-  2: 'Pop/Rock',
-  3: 'Religieux',
-  4: 'Mizrahi/Oriental'
-};
+const GENRES = [
+  ['0', 'Poémes en musique'],
+  ['1', 'Classiques'],
+  ['2', 'Pop/Rock'],
+  ['3', 'Religieux'],
+  ['4', 'Mizrahi/Oriental']
+];
+const GENRE_LABELS = Object.fromEntries(GENRES);
 
 function populateGenreOptions(selectEl){
   const optAll = document.createElement('option');
@@ -569,10 +570,10 @@ function populateGenreOptions(selectEl){
   optAll.textContent = 'Tous';
   selectEl.appendChild(optAll);
 
-  Object.keys(GENRES).forEach(code => {
+  GENRES.forEach(([code, label]) => {
     const opt = document.createElement('option');
     opt.value = code;
-    opt.textContent = GENRES[code];
+    opt.textContent = label;
     selectEl.appendChild(opt);
   });
 }
@@ -609,6 +610,23 @@ function shortLabel(title){
 }
 
 // Extrait l'ID vidéo YouTube depuis youtu.be/ID ou youtube.com/watch?v=ID
+// URL du petit compteur PHP (pixel invisible, pas de lecture de réponse
+// donc aucun souci de CORS même appelé depuis GitHub Pages).
+const TRACK_URL = 'https://www.parisoft.net/pb/track.php';
+
+// items: [{title, page}, ...] — pour une playlist, tous les titres partent
+// dans le même appel, donc la même heure côté serveur pour toute la liste.
+function trackTitles(items){
+  try{
+    const params = new URLSearchParams();
+    items.forEach(function(it){
+      params.append('titles[]', it.title || '');
+      params.append('pages[]', it.page || '');
+    });
+    new Image().src = TRACK_URL + '?' + params.toString();
+  }catch(e){}
+}
+
 function getVideoId(href){
   try{
     const u = new URL(href);
@@ -625,6 +643,8 @@ function buildEntry(item){
   li.dataset.searchRaw = normalizeRaw(item.artist + ' ' + item.title);
   li.dataset.genre = (item.note != null) ? String(item.note) : '';
   li.dataset.artist = item.artist || '';
+  li.dataset.title = item.title || '';
+  li.dataset.page = item.page || '';
 
   const folio = document.createElement('span');
   folio.className = 'folio';
@@ -646,6 +666,9 @@ function buildEntry(item){
     a.target = '_blank';
     a.rel = 'nofollow noopener';
     a.textContent = item.title;
+    a.addEventListener('click', function(){
+      trackTitles([{title: item.title, page: item.page}]);
+    });
     textWrap.appendChild(a);
   } else {
     const span = document.createElement('span');
@@ -777,6 +800,7 @@ function shuffle(arr){
 // Volontairement indépendant de toute gestion de fenêtre navigateur
 // (fiable même en file://, contrairement au ciblage de fenêtre nommée).
 let playlistOpened = false;
+let lastPlaylistEntries = []; // [{title, page}, ...] de la playlist actuellement affichée
 function markPlaylistFresh(){
   playlistOpened = false;
   playlistLink.classList.remove('opened');
@@ -790,17 +814,18 @@ function showRandomPlaylist(){
     playlistBar.classList.remove('show');
     return;
   }
-  const allIds = [];
+  const allEntries = [];
   document.querySelectorAll('li.entry').forEach(li => {
-    if(li.dataset.videoId) allIds.push(li.dataset.videoId);
+    if(li.dataset.videoId) allEntries.push({id: li.dataset.videoId, title: li.dataset.title || '', page: li.dataset.page || ''});
   });
-  if(allIds.length < 2){
+  if(allEntries.length < 2){
     playlistBar.classList.remove('show');
     return;
   }
-  const ids = shuffle(allIds).slice(0, MAX_PLAYLIST);
-  playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
-  playlistCount.textContent = ids.length;
+  const picked = shuffle(allEntries).slice(0, MAX_PLAYLIST);
+  lastPlaylistEntries = picked;
+  playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + picked.map(e => e.id).join(',');
+  playlistCount.textContent = picked.length;
   playlistSuffix.textContent = ' aléatoires';
   playlistLes.textContent = '';
   markPlaylistFresh();
@@ -821,7 +846,7 @@ function reapplySearchFilter(){
   // digraphe" (la requête brute elle-même fait partie de ses variantes).
   const rawVariants = digraphVariants(qRaw);
   let visible = 0;
-  const visibleIds = [];
+  const visibleEntries = [];
 
   document.querySelectorAll('li.entry').forEach(li => {
     const textMatch = !q
@@ -833,7 +858,7 @@ function reapplySearchFilter(){
     li.classList.toggle('hidden', !match);
     if(match){
       visible++;
-      if(li.dataset.videoId) visibleIds.push(li.dataset.videoId);
+      if(li.dataset.videoId) visibleEntries.push({id: li.dataset.videoId, title: li.dataset.title || '', page: li.dataset.page || ''});
     }
   });
 
@@ -842,21 +867,22 @@ function reapplySearchFilter(){
 
   // Playlist : seulement si un filtre est actif + au moins 2 vidéos trouvées
   if(filtered){
-    if(visibleIds.length >= 2){
-      const ids = shuffle(visibleIds).slice(0, MAX_PLAYLIST);
-      playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + ids.join(',');
-      playlistCount.textContent = ids.length;
+    if(visibleEntries.length >= 2){
+      const picked = shuffle(visibleEntries).slice(0, MAX_PLAYLIST);
+      lastPlaylistEntries = picked;
+      playlistLink.href = 'https://www.youtube.com/watch_videos?video_ids=' + picked.map(e => e.id).join(',');
+      playlistCount.textContent = picked.length;
       markPlaylistFresh();
 
       // Texte du lien personnalisé selon le filtre actif (le nom de la
       // playlist YouTube elle-même n'est pas paramétrable côté URL).
       let suffix = ' à la suite';
       if(a && g){
-        suffix = ' de ' + a + ' (' + GENRES[g] + ')';
+        suffix = ' de ' + a + ' (' + GENRE_LABELS[g] + ')';
       } else if(a){
         suffix = ' de ' + a;
       } else if(g){
-        suffix = ' ' + GENRES[g];
+        suffix = ' ' + GENRE_LABELS[g];
       } else if(searchInput.value.trim()){
         suffix = ' pour « ' + searchInput.value.trim() + ' »';
       }
@@ -955,6 +981,11 @@ playlistLink.addEventListener('click', function(e){
   }
   playlistOpened = true;
   playlistLink.classList.add('opened');
+
+  // Tous les titres de la playlist ouverte, même heure pour tous.
+  if(lastPlaylistEntries.length){
+    trackTitles(lastPlaylistEntries.map(function(e){ return {title: e.title, page: e.page}; }));
+  }
 });
 </script>
 </body>
