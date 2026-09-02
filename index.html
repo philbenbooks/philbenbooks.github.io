@@ -249,6 +249,65 @@
   /* ── NOTA ── */
   .nota { font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
 </style>
+<style>
+.btn-lien {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none !important;
+    font-family: Arial, sans-serif;
+  }
+.btn-amazon { background:#ff9900; color:#fff !important; }
+.btn-amazon:hover { background:#e68a00; }  
+.btn-pdf    { background:#cc0000; color:#fff !important; }
+.btn-pdf:hover    { background:#a00000; }  
+.tomes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .tomes-grid .book-card { margin: 0; }
+  @media (max-width: 700px) {
+    .tomes-grid { grid-template-columns: 1fr; }
+  }
+.tomes-covers {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 12px 0 18px;
+    flex-wrap: wrap;
+  }
+  .tomes-covers a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .tomes-covers img {
+    width: 140px;
+    max-width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    display: block;
+  }
+  .tomes-covers span {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--text);
+    font-weight: bold;
+  }
+  @media (max-width: 600px) {
+    .tomes-covers {
+      flex-direction: column;
+      align-items: center;
+    }
+    .tomes-covers img { width: 130px; }
+  }
+</style>  
 </head>
 <body>
 
@@ -256,6 +315,7 @@
   <a href="https://www.philbenbooks.com/" class="active">Français</a>
   <a href="https://www.philbenbooks.com/en.html">English</a>
 </header>
+
 
 <div class="spacer"></div>
 
@@ -271,7 +331,7 @@
 
   <h2>Thèmes principaux de ses livres</h2>
   <h3>1. Amour interculturel et interdit</h3>
-  <p>Nombre de ses histoires s'articulent autour de relations qui transcendent les frontières - religieuses, culturelles ou morales, créant une tension émotionnelle sans complexité excessive.</p>
+  <p>Nombre de ses histoires s'articulent autour de relations qui transcendent les frontières – religieuses, culturelles ou morales, créant une tension émotionnelle sans complexité excessive.</p>
   <h3>2. Honnêteté émotionnelle et premier amour</h3>
   <p>Ses personnages vivent souvent le premier amour, la vulnérabilité, des dilemmes moraux et une évolution personnelle. Le ton est tendre et sincère.</p>
   <h3>3. Le quotidien comme contexte d'apprentissage</h3>
@@ -287,73 +347,168 @@
   <h3>3. Le contexte émotionnel favorise la mémorisation</h3>
   <p>Comme les histoires sont romantiques et personnelles, les apprenants ont tendance à mieux retenir le vocabulaire.</p>
   <h3>4. La répétition sans ennui</h3>
-  <p>Les dialogues romantiques et les situations du quotidien répètent naturellement des structures utiles : « Je veux... », « Je ressens... », « Où vas-tu ? »</p>
+  <p>Les dialogues romantiques et les situations du quotidien répètent naturellement des structures utiles : « Je veux… », « Je ressens… », « Où vas-tu ? »</p>
   <h3>5. Un aperçu culturel</h3>
   <p>Certaines histoires se déroulent en Israël ou mettent en scène des personnages juifs/israéliens, offrant un contexte culturel et des expressions authentiques.</p>
 
   <hr class="section-divider">
   <h1>Livres de Phil Ben</h1>
 
-  <!-- NOUVEAU: LE COMTE DE MONTE-CRISTO -->
-  <h2 style="color:var(--red); border-color:var(--red);">NOTRE NOUVEAU LIVRE !</h2>
-  <div class="book-card">
-    <div class="book-card-inner">
-      <div class="book-card-body">
-        <p class="book-title-heading">Le Comte de Monte-Cristo</p>
-        <p class="book-desc">Livre bilingue adapté en hébreu facile et vocalisé avec audio ! Apprenez l'hébreu avec un classique !</p>
-        <ul class="features" style="margin-bottom:12px;">
-          <li>Un texte hébreu vocalisé clair et accessible, idéal pour les apprenants intermédiaires</li>
-          <li>Traduction littérale sur deux colonnes ligne à ligne - Hébreu et Français face à face</li>
-          <li>Découpage par paragraphe aéré pour une lecture aisée</li>
-          <li>Plus de 5 heures d'audio en hébreu israélien, téléchargeables gratuitement</li>
-          <li>QR code + lien digital pour écouter l'audio de chaque chapitre</li>
-          <li>Plus de 2000 mots et verbes clés traduits en français, classés par chapitre</li>
-        </ul>
-		 <div style="background: #fff8f0; border: 1px dashed var(--red); padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">
-          <span style="font-weight: bold; color: var(--red); font-size: 0.95rem; display: block; margin-bottom: 6px;">🎁 TESTEZ GRATUITEMENT :</span>
-          <a class="btn-lien btn-pdf" href="https://philben55.gumroad.com/l/iabsle" target="_blank" style="font-size: 13px; padding: 8px 16px;">Télécharger les premières pages (PDF + Audio)</a>
+  <!-- MONTE-CRISTO TOMES 1 & 2 -->
+  <h2 style="color:var(--red); border-color:var(--red); text-align:center;">NOTRE NOUVEAU LIVRE !</h2>
+  <p style="text-align:center; font-size:1.3rem; font-weight:bold; margin-bottom:4px;">Le Comte de Monte-Cristo en 2 Tomes</p>
+
+  <div class="tomes-covers">
+    <a href="#tome1-card">
+      <img src="https://philbenbooks.github.io/img/d2dmc4.jpg" alt="Le Comte de Monte-Cristo Tome 1 bilingue hébreu français">
+      <span>Tome 1</span>
+    </a>
+    <a href="#tome2-card">
+      <img src="https://philbenbooks.github.io/img/MC2fullcover42.jpg" alt="Le Comte de Monte-Cristo Tome 2 bilingue hébreu français">
+      <span>Tome 2</span>
+    </a>
+  </div>
+
+  <div class="intro-block">
+    <h2 style="margin-top:0;">Apprenez l'hébreu avec un classique !</h2>
+    <p style="font-style:italic; text-align:center; color:var(--muted); margin-bottom:16px;">Le Comte de Monte-Cristo, adapté aux apprenants francophones en Hébreu moderne</p>
+    <p>Le Comte de Monte&#8209;Cristo comme vous ne l&rsquo;avez jamais lu. Vous avez aimé le chef&#8209;d&rsquo;&#339;uvre d&rsquo;Alexandre Dumas dans votre jeunesse&nbsp;? Redécouvrez&#8209;le tout en améliorant votre hébreu grâce à une édition pédagogique bilingue conçue pour les niveaux intermédiaires. Cette adaptation propose aussi une lecture nouvelle de sa conclusion. La vengeance, la justice et la rédemption chrétienne y cèdent la place à une réflexion sur la responsabilité, la réparation et la possibilité pour Edmond Dantès de se reconstruire après la violence, inspirée notamment par la notion juive de Tikkoun Olam et par une sensibilité proche de la pensée de Camus.</p>
+    <ul class="features" style="font-size:0.85rem;">
+      <li>Un texte hébreu vocalisé clair et accessible, idéal pour les apprenants intermédiaires et supérieurs.</li>
+      <li>Traduction littérale sur deux colonnes ligne à ligne avec Hébreu et Français face à face.</li>
+      <li>Découpage par paragraphe aéré pour une lecture aisée</li>
+      <li>Plus de 9 heures d'audio en hébreu israélien, téléchargeables gratuitement pour une écoute tout en lisant le texte.</li>
+      <li>Chaque chapitre est accompagné d'un QR code lien digital pour écouter l'audio correspondant en hébreu.</li>
+      <li>Enrichissez votre vocabulaire avec plus de 3500 mots et verbes clés, traduits en français et classés en tableau par chapitre.</li>
+      <li>Un découpage clair et aéré, pensé pour faciliter la lecture parallèle.</li>
+      <li>Une narration resserrée et cohérente, débarrassée des longueurs pour mettre en valeur l'action, la psychologie et la tension dramatique.</li>
+      <li><strong>Une postface exclusive, détaillant les choix littéraires et narratifs originaux (Tikkoun Olam, Camus) de cette adaptation.</strong></li>
+    </ul>
+    <p>Cette adaptation moderne regroupe le roman en deux tomes (au lieu des six originaux) pour une lecture plus compacte et agréable. Chaque tome peut être lu indépendamment.</p>
+    <p style="text-align:center; font-weight:bold;">Transformez votre pratique de l'hébreu en un moment de véritable plaisir littéraire.</p>
+    <p>Parfait pour l'auto-apprentissage, l'enseignement en classe ou pour toute personne souhaitant améliorer son hébreu tout en savourant un classique de la littérature. Que vous souhaitiez réviser la grammaire, enrichir votre vocabulaire ou simplement vous entraîner à la lecture et à l'écoute, cette édition transforme un roman apprécié en un puissant outil d'apprentissage de l'hébreu moderne israélien.</p>
+  </div>
+
+  <div class="tomes-grid">
+    <!-- TOME 1 -->
+    <div class="book-card" id="tome1-card">
+      <div class="book-card-inner">
+        <div class="book-card-body">
+          <p class="book-title-heading">Le Comte de Monte-Cristo — Tome 1</p>
+          <div style="background: #fff8f0; border: 1px dashed var(--red); padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">
+            <span style="font-weight: bold; color: var(--red); font-size: 0.95rem; display: block; margin-bottom: 6px;">🎁 TESTEZ GRATUITEMENT :</span>
+            <a class="btn-lien btn-pdf" href="https://philben55.gumroad.com/l/iabsle" target="_blank" style="font-size: 13px; padding: 8px 16px;">Télécharger les premières pages (PDF + Audio)</a>
+          </div>
+          <h4>Disponible en format papier sur</h4>
+          <ul class="links-list">
+            <li><a href="https://www.amazon.fr/dp/B0GXWHPNDG" target="_blank">Amazon</a><br> et à l'ECUJE - Paris</li>
+          </ul>
+          <h4>Disponible en format PDF 25€ TTC via :</h4>
+          <ul class="links-list">
+            <li><a href="https://www.paypal.com/ncp/payment/QBWK5JQCJZGM2" target="_blank">PayPal</a>,
+              <a href="https://philben55.gumroad.com/l/zmddub" target="_blank">Gumroad</a>,
+              <a href="https://play.google.com/store/books/details?id=LuTREQAAQBAJ" target="_blank">Google Play</a>,
+              <a href="https://buy.stripe.com/8x228r1kw8Tr8TPekB9oc00" target="_blank">Stripe</a></li>
+          </ul>
+          <h4>Disponible en livre audio via :</h4>
+          <ul class="links-list">
+            <li><a href="https://play.google.com/store/audiobooks/details?id=AQAAAEBa1zuXcM" target="_blank">Google Play</a>,
+              <a href="https://open.spotify.com/show/6Da5K7EjwOyiorDo9oCasw" target="_blank">Spotify</a></li>
+          </ul>
+          <h4>Extrait en vidéo des premières pages du livre :</h4>
+          <div class="video-wrap">
+            <video controls>
+              <source src="https://www.parisoft.net/pb/Monte-Cristo1.mp4" type="video/mp4">
+            </video>
+          </div>
         </div>
-        <ul class="links-list">
-          <li><a href="https://www.amazon.fr/dp/B0GXWHPNDG" target="_blank">Amazon - format papier</a></li>
-          <li><a href="https://www.paypal.com/ncp/payment/QBWK5JQCJZGM2" target="_blank">PDF 25€ TTC via PayPal</a></li>
-          <li><a href="https://play.google.com/store/books/details?id=LuTREQAAQBAJ" target="_blank">Via Google Play</a></li>
-          <li><a href="https://buy.stripe.com/8x228r1kw8Tr8TPekB9oc00" target="_blank">Via Stripe</a></li>
-        </ul>
-        <div class="video-wrap">
-          <video controls>
-            <source src="https://www.parisoft.net/pb/Monte-Cristo1.mp4" type="video/mp4">
-          </video>
+        <div class="book-card-cover">
+          <a href="https://www.amazon.fr/dp/B0GXWHPNDG" target="_blank">
+            <img src="https://philbenbooks.github.io/img/d2dmc4.jpg" alt="Le Comte de Monte-Cristo Tome 1 bilingue hébreu français">
+          </a>
         </div>
       </div>
-      <div class="book-card-cover">
-        <a href="https://www.amazon.fr/dp/B0GXWHPNDG" target="_blank">
-          <img src="https://philbenbooks.github.io/img/d2dmc4.jpg" alt="Le Comte de Monte-Cristo bilingue hébreu français">
-        </a>
+    </div>
+
+    <!-- TOME 2 -->
+    <div class="book-card" id="tome2-card">
+      <div class="book-card-inner">
+        <div class="book-card-body">
+          <p class="book-title-heading">Le Comte de Monte-Cristo — Tome 2</p>
+          <div style="background: #fff8f0; border: 1px dashed var(--red); padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">
+            <span style="font-weight: bold; color: var(--red); font-size: 0.95rem; display: block; margin-bottom: 6px;">🎁 TESTEZ GRATUITEMENT :</span>
+            <a class="btn-lien btn-pdf" href="https://philben55.gumroad.com/l/fykxxn" target="_blank" style="font-size: 13px; padding: 8px 16px;">Télécharger les premières pages (PDF + Audio)</a>
+          </div>
+          <h4>Disponible en format papier sur</h4>
+          <ul class="links-list">
+            <li><a href="https://www.amazon.fr/dp/B0HGYBP4J5" target="_blank">Amazon</a><br> et à l'ECUJE - Paris</li>
+          </ul>
+          <h4>Disponible en format PDF 25€ TTC via :</h4>
+          <ul class="links-list">
+            <li><a href="https://www.paypal.com/ncp/payment/LKS97QDQZFC2W" target="_blank">PayPal</a>,
+              <a href="https://philben55.gumroad.com/l/xpcvqt" target="_blank">Gumroad</a>,
+              <a href="https://play.google.com/store/books/details?id=5uoGEgAAQBAJ" target="_blank">Google Play</a>,
+              <a href="https://buy.stripe.com/eVq5kDe7i2v3ee93FX9oc02" target="_blank">Stripe</a></li>
+          </ul>
+          <h4>Disponible en livre audio via :</h4>
+          <ul class="links-list">
+            <li><a href="https://play.google.com/store/audiobooks/details?id=AQAAAEAGuhL6BM" target="_blank">Google Play</a>,
+              <a href="https://open.spotify.com/show/76YcSk5jFQ9aCdXClmCg13" target="_blank">Spotify</a></li>
+          </ul>
+          <h4>Extrait en vidéo des premières pages du livre :</h4>
+          <div class="video-wrap">
+            <video controls>
+              <source src="https://www.parisoft.net/pb/MonteCristo2demo1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="book-card-cover">
+          <a href="https://www.amazon.fr/dp/B0HGYBP4J5" target="_blank">
+            <img src="https://philbenbooks.github.io/img/MC2imgrecto.jpg" alt="Le Comte de Monte-Cristo Tome 2 bilingue hébreu français">
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- CHANSONS -->
-  <h2>Nos Livres de Chansons</h2>
+  <h2>Nos Livres de Chansons (300 traduites !)</h2>
   <div class="songs-grid">
     <div class="song-card">
-      <img class="cover-sm" src="https://philbenbooks.github.io/img/100trad.jpg" alt="100 traductions chansons israéliennes hébreu français">
-      <h3>100 Traductions de Chansons Israéliennes</h3>
-      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:10px;">Avec QR code pour écouter chaque chanson. Et en prime : Brel, Brassens, Aznavour, Moustaki en hébreu !</p>
+<a href="https://www.amazon.fr/dp/1790358760" target="_blank">
+      <img class="cover-sm" src="https://philbenbooks.github.io/img/amazon200chan.jpg" alt="200 traductions chansons israéliennes hébreu">
+ </a> 
+      <h3>200 Traductions de Chansons Israéliennes</h3>
+      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:10px;">Une collection complète de chansons israéliennes bilingues. Les plus grands Hits traduits en français</p>
+      <div style="background: #fff8f0; border: 1px dashed var(--red); padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">
+        <span style="font-weight: bold; color: var(--red); font-size: 0.8rem; display: block; margin-bottom: 6px;">🎧 Emmenez Israël partout avec vous avec notre Jukebox automatique ! Ecoute des chansons du livre par chanteur, par chanson ou genre avec Playlists</span>
+        <a class="btn-lien btn-pdf" href="https://philbenbooks.github.io/ind200.html" target="_blank" style="font-size: 11px; padding: 5px 10px;">Ouvrir le Jukebox</a>
+      </div>
       <ul class="links-list" style="font-size:0.9rem;">
-        <li><a href="https://www.amazon.fr/dp/B0BYTS6RDH" target="_blank">Livre papier sur Amazon</a></li>
-        <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WSAF9YQKTTD7N" target="_blank">Fichier PDF : 25€</a></li>
-        <li><a href="https://parisoftnet.securesitefr.com/pb/expagelivre100trad2.pdf" target="_blank">Voir une page du livre</a></li>
+        <li><a class="btn-lien btn-amazon" href="https://www.amazon.fr/200-Traductions-chansons-Isra%C3%A9liennes-traductions/dp/1790358760" target="_blank">Livre papier sur Amazon</a>  <br><b>et à l'ECUJE - Paris</b></li>
+        <li><b>Fichier PDF via :</b>  <a href="https://www.paypal.com/ncp/payment/JUE885S38BMYL" target="_blank">PayPal</a>, 
+<a  href="https://philben55.gumroad.com/l/kkxnf" target="_blank">Gumroad</a>, 
+<a  href="https://play.google.com/store/books/details?id=xzr1EQAAQBAJ" target="_blank">Google Play</a>
+
+
+</li>
+        <li><a href="https://www.parisoft.net/pb/exPage11LivreTrad.pdf" target="_blank">Voir une page du livre</a></li>
       </ul>
+      <p style="font-size:0.8rem; font-style:italic; color:var(--muted); margin-top:10px;"><span style="color:#FF6200;">★★★★★</span> « Dès réception, l'envie de chanter est là ! Un livre vivement recommandé. » — avis d'un lecteur &nbsp;(<a href="https://www.amazon.fr/dp/1790358760#averageCustomerReviewsAnchor" target="_blank" style="font-style:normal;">voir les avis sur Amazon</a>)</p>
     </div>
     <div class="song-card">
-      <img class="cover-sm" src="https://philbenbooks.github.io/img/amazon200chan.jpg" alt="200 traductions chansons israéliennes hébreu">
-      <h3>200 Traductions de Chansons Israéliennes</h3>
-      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:10px;">La collection complète de chansons israéliennes bilingues.</p>
+ <a href="https://www.amazon.fr/dp/B0BYTS6RDH" target="_blank">
+      <img class="cover-sm" src="https://philbenbooks.github.io/img/100trad.jpg" alt="100 traductions chansons israéliennes hébreu français">
+ </a>     
+<h3>100 Traductions de Chansons Israéliennes</h3>
+      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:10px;">Avec QR code pour écouter chaque chanson. Et en prime : Brel, Brassens, Aznavour, Moustaki en hébreu !</p>
       <ul class="links-list" style="font-size:0.9rem;">
-        <li><a href="https://www.amazon.fr/200-Traductions-chansons-Isra%C3%A9liennes-traductions/dp/1790358760" target="_blank">Livre papier sur Amazon</a></li>
-        <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RHUYRK7EDWE9U" target="_blank">Fichier PDF : 25€</a></li>
-        <li><a href="https://parisoftnet.securesitefr.com/pb/exPage11LivreTrad.pdf" target="_blank">Voir une page du livre</a></li>
+        <li><a class="btn-lien btn-amazon" href="https://www.amazon.fr/dp/B0BYTS6RDH" target="_blank">Livre papier sur Amazon</a></li>
+        <li><b>Fichier PDF via :</b>  <a href="https://www.paypal.com/ncp/payment/MA84P3LDSJC7A" target="_blank">PayPal</a>,
+		<a  href="https://philben55.gumroad.com/l/hczdew" target="_blank">Gumroad</a>, 
+<a  href="https://play.google.com/store/books/details?id=I7X4EQAAQBAJ" target="_blank">Google Play</a>
+		</li>
+        <li><a href="https://www.parisoft.net/pb/expagelivre100trad2.pdf" target="_blank">Voir une page du livre</a></li>
       </ul>
     </div>
   </div>
@@ -363,7 +518,7 @@
 
   <div class="offer-box">
     <strong>NOS TROIS ROMANS BILINGUES AVEC VOYELLES &amp; AUDIO !</strong><br>
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N2P7D8ZPX7Y5E" target="_blank">Offre spéciale : les 3 en version PDF - Paiement CB 55 € : Cliquez ici</a><br>
+    <a href="https://www.paypal.com/ncp/payment/83FPK9LNXTEZ2" target="_blank">Offre spéciale : les 3 en PDF —  55 € : Cliquez ici</a><br>
     <small>Fichiers audio via QR code &amp; lien digital • Texte Hébreu lu à haute voix à un rythme lent</small>
     <ul class="features" style="margin-bottom:12px; margin-top:10px; text-align:left;">
       <li>Écrit en hébreu israélien facile avec pour chaque chapitre deux sections :</li>
@@ -374,7 +529,7 @@
       <li>Découpage par paragraphe aéré pour une lecture aisée.</li>
     </ul>
     <div style="text-align:center; margin-top:16px;">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCY_eyvYy3ipvKe6pOwt5PGX6CCUSxA3WWevoogxYwVApb3_uO1QX6_evZpqNzijN2sbVd090ubTgFDof_5viMP6PWrNEY2o5NXQbqSHWcnG6Im3NANKTlgdzry8sWcQXZl6cGcQyo4uVcMjAre5dND0TsC5_CqpmsGGDbEQpFdJeTwCWlAn4jV-1R/s1021/trilogie.bmp" alt="trilogie romans bilingues hébreu français" style="max-width:280px; width:100%; border-radius:6px;">
+      <img src="https://philbenbooks.github.io/img/trilogie.bmp" alt="trilogie romans bilingues hébreu français" style="max-width:280px; width:100%; border-radius:6px;">
       <p style="margin-top:8px;">Nos livres ce sont nos lecteurs qui en parlent le mieux ! <a href="https://www.amazon.com/review/R2QTNSAFTEKDRH/ref=cm_cr_srp_d_rdp_perm?ie=UTF8" target="_blank">Cliquez ici</a></p>
     </div>
   </div>
@@ -383,17 +538,17 @@
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
-        <p class="book-title-heading">Une Simple Histoire d'Amour - סְתָם סִפּוּר אַהֲבָה</p>
+        <p class="book-title-heading">Une Simple Histoire d'Amour — סְתָם סִפּוּר אַהֲבָה</p>
         <p class="book-desc">L'histoire d'un amour « impossible » entre un jeune juif et une jeune fille chrétienne en Israël dans les années 80.</p>
         <ul class="links-list">
-          <li><a href="https://www.amazon.com/dp/1081198559" target="_blank">Livre broché - Amazon.com</a></li>
-          <li><a href="https://www.amazon.fr/dp/1081198559" target="_blank">Livre broché - Amazon.fr</a></li>
-          <li><a href="https://www.fnac.com/livre-numerique/a13672381/Phil-Ben-Une-Simple-Histoire-d-Amour-Bilingual-French-Hebrew-Book" target="_blank">Ebook - Fnac.com</a></li>
+          <li><a href="https://www.amazon.com/dp/1081198559" target="_blank">Livre broché — Amazon.com</a></li>
+          <li><a href="https://www.amazon.fr/dp/1081198559" target="_blank">Livre broché — Amazon.fr</a></li>
+          <li><a href="https://www.fnac.com/livre-numerique/a13672381/Phil-Ben-Une-Simple-Histoire-d-Amour-Bilingual-French-Hebrew-Book" target="_blank">Ebook — Fnac.com</a></li>
           <li><a href="https://books2read.com/Une-simple-histoire-d-amour-Bilingue-Hebreu-Francais" target="_blank">Autres magasins (Kobo, Apple, etc.)</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9TMAKBFCVT3FJ" target="_blank">Format PDF CB 25 €</a></li>
-          <li><a href="https://parisoftnet.securesitefr.com/pb/unesimplehistoirepage1.pdf" target="_blank">Lire un extrait</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/KHLK4563JQHUU" target="_blank">Format PDF CB 25 €</a></li>
+          <li><a href="https://www.parisoft.net/pb/unesimplehistoirepage1.pdf" target="_blank">Lire un extrait</a></li>
         </ul>
-        <p style="font-size:0.9rem; margin-top:10px;"><a href="https://www.amazon.fr/review/R34N4RIER1YK59/ref=cm_cr_srp_d_rdp_perm?ie=UTF8&ASIN=1081198559" target="_blank">Ce qu'en pensent nos lecteurs</a></p>
+        <p style="font-size:0.8rem; font-style:italic; color:var(--muted); margin-top:10px;"><span style="color:#FF6200;">★★★★★</span> « Une belle façon de progresser en hébreu à son rythme. » — avis d'un lecteur &nbsp;(<a href="https://www.amazon.fr/dp/1792643489#averageCustomerReviewsAnchor" target="_blank" style="font-style:normal;">voir les avis sur Amazon</a>)</p>
       </div>
       <div class="book-card-cover">
         <a href="https://www.amazon.fr/dp/1081198559" target="_blank">
@@ -407,17 +562,17 @@
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
-        <p class="book-title-heading">Une Petite Tromperie - בְּגִידָה קְטַנָּה</p>
+        <p class="book-title-heading">Une Petite Tromperie — בְּגִידָה קְטַנָּה</p>
         <p class="book-desc">Les amours « compliquées » d'un jeune juif français en Israël dans les années 80.</p>
         <ul class="links-list">
-          <li><a href="https://www.amazon.com/dp/B08NX6QF7D" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/B08NX6QF7D" target="_blank">Amazon.fr</a> - livre broché avec audio</li>
+          <li><a href="https://www.amazon.com/dp/B08NX6QF7D" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/B08NX6QF7D" target="_blank">Amazon.fr</a> — livre broché avec audio</li>
           <li><a href="https://books2read.com/u/bw7agP" target="_blank">Ebook (Kobo, Apple, Fnac, etc.)</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=49U6H5428ECQS" target="_blank">Format PDF CB 25 €</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/7AKQCTYGCER96" target="_blank">Format PDF  25 €</a></li>
         </ul>
         <div class="video-wrap">
           <p class="video-label">Exemple en vidéo des premières pages :</p>
           <video controls>
-            <source src="https://parisoftnet.securesitefr.com/pb/BguidaKetanafrenchPresentation.mp4" type="video/mp4">
+            <source src="https://www.parisoft.net/pb/BguidaKetanafrenchPresentation.mp4" type="video/mp4">
           </video>
         </div>
         <div class="audio-section">
@@ -447,19 +602,19 @@
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
-        <p class="book-title-heading">La Fin du Chemin - סוֹף הַדֶּרֶךְ</p>
+        <p class="book-title-heading">La Fin du Chemin — סוֹף הַדֶּרֶךְ</p>
         <p class="book-desc">La suite des aventures sentimentales de notre héros aux États-Unis et en France. Mais peut-on oublier son premier amour ? (Peut être lu indépendamment.)</p>
         <p class="nota">Lu par Revital Berger Shloman / professeur d'hébreu émérite !</p>
         <ul class="links-list">
-          <li><a href="https://www.amazon.com/dp/1670367207" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/1670367207" target="_blank">Amazon.fr</a> - livre broché</li>
-          <li><a href="https://www.fnac.com/livre-numerique/a14080229" target="_blank">Fnac.com - ebook</a></li>
+          <li><a href="https://www.amazon.com/dp/1670367207" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/1670367207" target="_blank">Amazon.fr</a> — livre broché</li>
+          <li><a href="https://www.fnac.com/livre-numerique/a14080229" target="_blank">Fnac.com — ebook</a></li>
           <li><a href="https://books2read.com/u/49QwRM" target="_blank">Kindle, Kobo, Apple, etc.</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VC3HED6JCJ8M2" target="_blank">Format PDF CB 25 €</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/KD4VBUEL78UKG" target="_blank">Format PDF CB 25 €</a></li>
         </ul>
         <div class="video-wrap">
           <p class="video-label">Voir les premières pages du livre :</p>
           <video controls>
-            <source src="https://parisoft.net/pb/SofHaderekNikudFrenchPres.mp4" type="video/mp4">
+            <source src="https://www.parisoft.net/pb/SofHaderekNikudFrenchPres.mp4" type="video/mp4">
           </video>
         </div>
         <div class="audio-section">
@@ -490,7 +645,7 @@
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
-        <p class="book-title-heading">Blagues Bilingues avec Illustrations - hébreu-français</p>
+        <p class="book-title-heading">Blagues Bilingues avec Illustrations — hébreu-français</p>
         <p class="book-desc">Progressez en Hébreu moderne avec ces blagues bilingues courtes et sans prétention.</p>
         <ul class="features" style="margin-bottom:12px;">
           <li>Texte Hébreu-Français face à face</li>
@@ -501,9 +656,9 @@
           <li>En Israël : contacter Mikael au 05 84 25 35 77</li>
         </ul>
         <ul class="links-list">
-          <li><a href="https://www.amazon.fr/dp/B0DKYL5MMX" target="_blank">Livre papier sur Amazon</a></li>
+          <li><a href="https://www.amazon.fr/dp/B0DKYL5MMX" target="_blank">Livre papier sur Amazon</a> <br><b>et à l'ECUJE - Paris</b></li>
           <li><a href="https://books2read.com/u/bzyXMG" target="_blank">Ebook (Fnac, Kobo, Apple, etc.)</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NATSZFDVDA2SY" target="_blank">PDF 25€ paiement CB</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/J4JUE7J6MCL3N" target="_blank">PDF 25€ paiement CB</a></li>
         </ul>
         <div class="video-wrap">
           <p class="video-label">Voir une vidéo de 3 blagues du livre :</p>
@@ -521,15 +676,15 @@
   </div>
 
   <!-- TOM SAWYER FR -->
-  <h2 style="color:var(--red); border-color:var(--red);">NOUVEAU ! Les Aventures de Tom Sawyer - Bilingue Hébreu-Français</h2>
+  <h2 style="color:var(--red); border-color:var(--red);">NOUVEAU ! Les Aventures de Tom Sawyer — Bilingue Hébreu-Français</h2>
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
-        <p class="book-title-heading">Tom Sawyer - Adapté aux apprenants francophones</p>
+        <p class="book-title-heading">Tom Sawyer — Adapté aux apprenants francophones</p>
         <p class="book-desc">Plongez dans l'univers espiègle de Tom Sawyer, adapté en hébreu simplifié et vocalisé pour les apprenants intermédiaires.</p>
         <ul class="features" style="margin-bottom:12px;">
-          <li>Texte hébreu vocalisé clair - idéal pour les niveaux intermédiaires et supérieurs</li>
-          <li>Traduction littérale sur deux colonnes - Hébreu et Français face à face</li>
+          <li>Texte hébreu vocalisé clair — idéal pour les niveaux intermédiaires et supérieurs</li>
+          <li>Traduction littérale sur deux colonnes — Hébreu et Français face à face</li>
           <li>Découpage par paragraphe aéré pour une lecture aisée</li>
           <li>Plus de 5 heures d'audio israélien, téléchargeables gratuitement</li>
           <li>QR code/lien digital pour chaque chapitre</li>
@@ -538,10 +693,10 @@
         <ul class="links-list">
           <li><a href="https://www.amazon.fr/dp/B0FQVBGQS5" target="_blank">Format papier sur Amazon</a></li>
           <li><a href="https://books2read.com/u/3nzBLP" target="_blank">Magasins ebook</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DX5QMD85PVNFS" target="_blank">Format PDF via PayPal 25€</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/4DXG5KR8LAAD6" target="_blank">Format PDF via PayPal 25€</a></li>
           <li><a href="https://open.spotify.com/show/5A9BUWyVVw0nnIkWCr3IBd" target="_blank">Livre audio sur Spotify</a></li>
-          <li><a href="https://www.amazon.fr/-/en/Aventures-Sawyer/dp/B0FQVBGQS5" target="_blank">Avis de nos lecteurs sur Amazon.fr</a></li>
         </ul>
+        <p style="font-size:0.8rem; font-style:italic; color:var(--muted); margin-top:10px;"><span style="color:#FF6200;">★★★★★</span> « Très efficace pour progresser en hébreu, et l'objet-livre est solide et bien fait. » — avis d'un lecteur &nbsp;(<a href="https://www.amazon.fr/-/en/Aventures-Sawyer/dp/B0FQVBGQS5#averageCustomerReviewsAnchor" target="_blank" style="font-style:normal;">voir les avis sur Amazon</a>)</p>
         <div class="video-wrap">
           <p class="video-label">Voir une vidéo des premières pages :</p>
           <video controls>
@@ -558,23 +713,23 @@
   </div>
 
   <!-- PESSEL HOL FR -->
-  <h2>Lisez un livre entier en hébreu - comme un vrai Sabra !</h2>
+  <h2>Lisez un livre entier en hébreu non vocalisé — comme un vrai Sabra !</h2>
   <div class="book-card">
     <div class="book-card-inner">
       <div class="book-card-body">
         <p class="book-title-heading" style="font-family:helvetica; font-size:1.4rem;">פסל חול</p>
         <p class="book-desc">Un roman d'amour captivant. L'histoire d'un « amour interdit » dans les années 80-90 en Israël, en France et aux États-Unis.</p>
         <ul class="links-list">
-          <li><a href="https://www.amazon.com/dp/B08MSQ3ZCC" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/B08MSQ3ZCC" target="_blank">Amazon.fr</a> - format papier</li>
+          <li><a href="https://www.amazon.com/dp/B08MSQ3ZCC" target="_blank">Amazon.com</a> &amp; <a href="https://www.amazon.fr/dp/B08MSQ3ZCC" target="_blank">Amazon.fr</a> — format papier</li>
           <li><a href="https://books2read.com/u/mgzZKX" target="_blank">Sites ebook</a></li>
-          <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AYK5XMLD4P2NY" target="_blank">PDF via PayPal : 20€</a></li>
+          <li><a href="https://www.paypal.com/ncp/payment/ZW87UNSTV6F76" target="_blank">PDF via PayPal : 25€</a></li>
           <li>
-            <a href="https://parisoftnet.securesitefr.com/pb/ExcerptPesselHoALL1Hebrew.pdf" target="_blank">Extrait 1</a> &nbsp;
-            <a href="https://parisoftnet.securesitefr.com/pb/ExcerptPesselHoALL2Hebrew.pdf" target="_blank">Extrait 2</a> &nbsp;
-            <a href="https://parisoftnet.securesitefr.com/pb/ExcerptPesselHoALL3Hebrew.pdf" target="_blank">Extrait 3</a>
+            <a href="https://www.parisoft.net/pb/ExcerptPesselHoALL1Hebrew.pdf" target="_blank">Extrait 1</a> &nbsp;
+            <a href="https://www.parisoft.net/pb/ExcerptPesselHoALL2Hebrew.pdf" target="_blank">Extrait 2</a> &nbsp;
+            <a href="https://www.parisoft.net/pb/ExcerptPesselHoALL3Hebrew.pdf" target="_blank">Extrait 3</a>
           </li>
         </ul>
-        <p class="nota">Nota : Ce livre est la somme entièrement en Hébreu des 3 livres bilingues : Une Simple Histoire d'Amour!, Une Petite Tromperie!, La Fin du Chemin.</p>
+        <p class="nota">Nota : Ce livre est la somme entièrement en Hébreu sans nikoud des 3 livres bilingues  : Une Simple Histoire d'Amour!, Une Petite Tromperie!, La Fin du Chemin.</p>
       </div>
      <div class="book-card-cover">
         <a href="https://www.amazon.fr/dp/B08MSQ3ZCC" target="_blank">
